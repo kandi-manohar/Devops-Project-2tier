@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage('Clone repo'){
             steps{
-                git branch: 'main', url: ''
+                git branch: 'main', url: 'https://github.com/kandi-manohar/Devops-Project-2tier.git'
             }
         }
         stage('Build image'){
