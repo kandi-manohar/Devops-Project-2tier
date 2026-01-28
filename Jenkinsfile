@@ -6,7 +6,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/kandi-manohar/Devops-Project-2tier.git'
+                url: 'https://github.com/kandi-manohar/Devops-Project-2tier.git'
             }
         }
 
@@ -20,17 +20,11 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'sudo docker build -t flask-app .'
-            }
-        }
-
         stage('Deploy with Docker Compose') {
             steps {
                 sh '''
-                sudo docker compose down || true
-                sudo docker compose up -d --build
+                docker compose down || true
+                docker compose up -d --build
                 '''
             }
         }

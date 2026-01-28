@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   db:
     image: mysql:8.1
@@ -10,11 +12,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    ports:
+      - "3306:3306"
 
   web:
     build: .
@@ -25,8 +24,7 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     volumes:
       - .:/app
 
