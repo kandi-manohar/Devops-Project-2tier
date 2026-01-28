@@ -1,22 +1,37 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('Clone repo'){
-            steps{
-                git branch: 'main', url: 'https://github.com/kandi-manohar/Devops-Project-2tier.git'
+
+    stages {
+
+        stage('Clone Repo') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/kandi-manohar/Devops-Project-2tier.git'
             }
         }
-        stage('Build image'){
-            steps{
-                sh 'docker build -t flask-app .'
+
+        stage('Create .env') {
+            steps {
+                withCredentials([string(credentialsId: 'flask-env', variable: 'ENV_FILE')]) {
+                    sh '''
+                    echo "$ENV_FILE" > .env
+                    '''
+                }
             }
         }
-        stage('Deploy with docker compose'){
-            steps{
-                // existing container if they are running
-                sh 'docker compose down || true'
-                // start app, rebuilding flask image
-                sh 'docker compose up -d --build'
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'sudo docker build -t flask-app .'
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                sh '''
+                sudo docker compose down || true
+                sudo docker compose up -d --build
+                '''
             }
         }
     }
